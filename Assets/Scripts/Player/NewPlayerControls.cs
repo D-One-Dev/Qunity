@@ -1,11 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Q3Movement
 {
-    /// <summary>
-    /// This script handles Quake III CPM(A) mod style player movement logic.
-    /// </summary>
-    public class Q3PlayerController : MonoBehaviour
+    // This script handles Quake III CPM(A) mod style player movement logic.
+    [RequireComponent(typeof(CharacterController))]
+    public class NewPlayerControls : MonoBehaviour
     {
         [System.Serializable]
         public class MovementSettings
@@ -37,14 +36,12 @@ namespace Q3Movement
         [SerializeField] private MovementSettings m_GroundSettings = new MovementSettings(7, 14, 10);
         [SerializeField] private MovementSettings m_AirSettings = new MovementSettings(7, 2, 2);
         [SerializeField] private MovementSettings m_StrafeSettings = new MovementSettings(1, 50, 50);
-        public float Speed { get { return rb.velocity.magnitude; } }
 
-        //private CharacterController m_Character;
+        // Returns player's current speed.
+        public float Speed { get { return m_Character.velocity.magnitude; } }
 
-        [SerializeField] private Rigidbody rb;
-        [SerializeField] private GroundCollider[] colliders;
+        private CharacterController m_Character;
         public Vector3 explosion;
-
         private Vector3 m_MoveDirectionNorm = Vector3.zero;
         private Vector3 m_PlayerVelocity = Vector3.zero;
 
@@ -61,6 +58,7 @@ namespace Q3Movement
         private void Start()
         {
             m_Tran = transform;
+            m_Character = GetComponent<CharacterController>();
 
             if (!m_Camera)
                 m_Camera = Camera.main;
@@ -74,12 +72,9 @@ namespace Q3Movement
             m_MoveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
             m_MouseLook.UpdateCursorLock();
             QueueJump();
-            m_MouseLook.LookRotation(m_Tran, m_CamTran);
-        }
 
-        private void FixedUpdate()
-        {
-            if (CheckGround())
+            // Set movement state.
+            if (m_Character.isGrounded)
             {
                 GroundMove();
             }
@@ -87,13 +82,13 @@ namespace Q3Movement
             {
                 AirMove();
             }
-            //rb.AddForce(Vector3.up * m_PlayerVelocity.y);
 
+            // Rotate the character and camera.
+            m_MouseLook.LookRotation(m_Tran, m_CamTran);
 
-            Debug.Log(explosion);
+            // Move the character.
             m_PlayerVelocity += explosion;
-            
-            rb.velocity = new Vector3(m_PlayerVelocity.x, m_PlayerVelocity.y, m_PlayerVelocity.z);
+            m_Character.Move(m_PlayerVelocity * Time.deltaTime);
         }
 
         // Queues the next jump.
@@ -174,7 +169,7 @@ namespace Q3Movement
 
             float zSpeed = m_PlayerVelocity.y;
             m_PlayerVelocity.y = 0;
-            /* Next two lines are equivalent to idTech's VectorNormalize() */
+            // Next two lines are equivalent to idTech's VectorNormalize()
             float speed = m_PlayerVelocity.magnitude;
             m_PlayerVelocity.Normalize();
 
@@ -240,7 +235,7 @@ namespace Q3Movement
             float drop = 0;
 
             // Only apply friction when grounded.
-            if (CheckGround())
+            if (m_Character.isGrounded)
             {
                 float control = speed < m_GroundSettings.Deceleration ? m_GroundSettings.Deceleration : speed;
                 drop = control * m_Friction * Time.deltaTime * t;
@@ -259,6 +254,7 @@ namespace Q3Movement
             }
 
             m_PlayerVelocity.x *= newSpeed;
+            // playerVelocity.y *= newSpeed;
             m_PlayerVelocity.z *= newSpeed;
         }
 
@@ -280,15 +276,6 @@ namespace Q3Movement
 
             m_PlayerVelocity.x += accelspeed * targetDir.x;
             m_PlayerVelocity.z += accelspeed * targetDir.z;
-        }
-
-        private bool CheckGround()
-        {
-            foreach (var collider in colliders)
-            {
-                if (collider.isGrounded) return true;
-            }
-            return false;
         }
     }
 }
