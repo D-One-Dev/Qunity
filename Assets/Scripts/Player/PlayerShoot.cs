@@ -14,6 +14,6 @@ public class PlayerShoot : MonoBehaviour
     private void Shoot()
     {
         GameObject projectile = Instantiate(_projectile, shootPoint.position, shootPoint.rotation);
-        projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * projectileSpeed;
+        projectile.GetComponent<Rigidbody>().velocity = cameraTransform.forward * projectileSpeed;
     }
 }
