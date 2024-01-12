@@ -6,10 +6,14 @@ public class PlayerShoot : MonoBehaviour
     public Transform shootPoint;
     public Transform cameraTransform;
     public float projectileSpeed;
-    void Update()
+    private NewInput playerInput;
+    private void Awake()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0)) Shoot();
+        playerInput = new NewInput();
+        playerInput.Gameplay.MouseLeftButton.performed += ctx => Shoot();
     }
+    private void OnEnable(){playerInput.Enable();}
+    private void OnDisable(){playerInput.Disable();}
 
     private void Shoot()
     {

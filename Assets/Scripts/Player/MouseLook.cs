@@ -22,16 +22,19 @@ namespace Q3Movement
         private Quaternion m_CameraTargetRot;
         private bool m_cursorIsLocked = true;
 
+        private NewInput playerInput;
+
         public void Init(Transform character, Transform camera)
         {
+            playerInput = new NewInput();
             m_CharacterTargetRot = character.localRotation;
             m_CameraTargetRot = camera.localRotation;
         }
 
-        public void LookRotation(Transform character, Transform camera)
+        public void LookRotation(Transform character, Transform camera, Vector2 mouseDelta)
         {
-            float yRot = Input.GetAxis("Mouse X") * m_XSensitivity;
-            float xRot = Input.GetAxis("Mouse Y") * m_YSensitivity;
+            float yRot = mouseDelta.x * m_XSensitivity;
+            float xRot = mouseDelta.y * m_YSensitivity;
 
             m_CharacterTargetRot *= Quaternion.Euler(0f, yRot, 0f);
             m_CameraTargetRot *= Quaternion.Euler(-xRot, 0f, 0f);
@@ -78,11 +81,11 @@ namespace Q3Movement
 
         private void InternalLockUpdate()
         {
-            if (Input.GetKeyUp(KeyCode.Escape))
+            if (playerInput.Gameplay.Escape.ReadValue<bool>())
             {
                 m_cursorIsLocked = false;
             }
-            else if (Input.GetMouseButtonUp(0))
+            else if (playerInput.Gameplay.MouseLeftButton.ReadValue<bool>())
             {
                 m_cursorIsLocked = true;
             }

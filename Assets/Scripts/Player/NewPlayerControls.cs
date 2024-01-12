@@ -44,6 +44,8 @@ namespace Q3Movement
         public Vector3 explosion;
         private Vector3 m_MoveDirectionNorm = Vector3.zero;
         private Vector3 m_PlayerVelocity = Vector3.zero;
+        private NewInput playerInput;
+        private bool jumpButton;
 
         // Used to queue the next jump just before hitting the ground.
         private bool m_JumpQueued = false;
@@ -54,6 +56,15 @@ namespace Q3Movement
         private Vector3 m_MoveInput;
         private Transform m_Tran;
         private Transform m_CamTran;
+
+        private void Awake()
+        {
+            playerInput = new NewInput();
+            playerInput.Gameplay.Jump.performed += ctx => jumpButton = true;
+            playerInput.Gameplay.Jump.canceled += ctx => jumpButton = false;
+        }
+        private void OnEnable(){playerInput.Enable();}
+        private void OnDisable(){playerInput.Disable();}
 
         private void Start()
         {
@@ -69,7 +80,8 @@ namespace Q3Movement
 
         private void Update()
         {
-            m_MoveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+            Vector2 input = playerInput.Gameplay.Direction.ReadValue<Vector2>();
+            m_MoveInput = new Vector3(input.x, 0f, input.y);
             m_MouseLook.UpdateCursorLock();
             QueueJump();
 
@@ -84,7 +96,8 @@ namespace Q3Movement
             }
 
             // Rotate the character and camera.
-            m_MouseLook.LookRotation(m_Tran, m_CamTran);
+            Vector2 delta = playerInput.Gameplay.MouseDelta.ReadValue<Vector2>() * Time.deltaTime;
+            m_MouseLook.LookRotation(m_Tran, m_CamTran, delta);
 
             // Move the character.
             m_PlayerVelocity += explosion;
@@ -96,16 +109,16 @@ namespace Q3Movement
         {
             if (m_AutoBunnyHop)
             {
-                m_JumpQueued = Input.GetButton("Jump");
+                m_JumpQueued = jumpButton;
                 return;
             }
 
-            if (Input.GetButtonDown("Jump") && !m_JumpQueued)
+            if (jumpButton && !m_JumpQueued)
             {
                 m_JumpQueued = true;
             }
 
-            if (Input.GetButtonUp("Jump"))
+            if (jumpButton)
             {
                 m_JumpQueued = false;
             }

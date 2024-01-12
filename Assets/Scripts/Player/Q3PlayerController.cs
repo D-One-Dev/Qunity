@@ -74,7 +74,8 @@ namespace Q3Movement
             m_MoveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
             m_MouseLook.UpdateCursorLock();
             QueueJump();
-            m_MouseLook.LookRotation(m_Tran, m_CamTran);
+            //УДАЛИТЬ, СТАРЫЙ СКРИПТ, РАБОТАТЬ НЕ БУДЕТ
+            m_MouseLook.LookRotation(m_Tran, m_CamTran, Vector2.zero);
         }
 
         private void FixedUpdate()
