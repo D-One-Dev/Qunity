@@ -155,7 +155,7 @@ MonoBehaviour:
     m_LockCursor: 1
   m_Friction: 6
   m_Gravity: 20
-  m_JumpForce: 8
+  m_JumpForce: 10
   m_AutoBunnyHop: 1
   m_AirControl: 0.3
   m_GroundSettings:

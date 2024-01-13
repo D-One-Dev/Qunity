@@ -9,8 +9,8 @@ namespace Q3Movement
     [Serializable]
     public class MouseLook
     {
-        [SerializeField] private float m_XSensitivity = 2f;
-        [SerializeField] private float m_YSensitivity = 2f;
+        public float m_XSensitivity = 2f;
+        public float m_YSensitivity = 2f;
         [SerializeField] private bool m_ClampVerticalRotation = true;
         [SerializeField] private float m_MinimumX = -90F;
         [SerializeField] private float m_MaximumX = 90F;
@@ -29,6 +29,7 @@ namespace Q3Movement
             playerInput = new NewInput();
             m_CharacterTargetRot = character.localRotation;
             m_CameraTargetRot = camera.localRotation;
+            SetCursorLock(true);
         }
 
         public void LookRotation(Transform character, Transform camera, Vector2 mouseDelta)
@@ -57,7 +58,7 @@ namespace Q3Movement
                 camera.localRotation = m_CameraTargetRot;
             }
 
-            UpdateCursorLock();
+            UpdateCursorLock(false);
         }
 
         public void SetCursorLock(bool value)
@@ -68,38 +69,43 @@ namespace Q3Movement
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
             }
-        }
-
-        public void UpdateCursorLock()
-        {
-            //if the user set "lockCursor" we check & properly lock the cursos
-            if (m_LockCursor)
-            {
-                InternalLockUpdate();
-            }
-        }
-
-        private void InternalLockUpdate()
-        {
-            if (playerInput.Gameplay.Escape.ReadValue<bool>())
-            {
-                m_cursorIsLocked = false;
-            }
-            else if (playerInput.Gameplay.MouseLeftButton.ReadValue<bool>())
-            {
-                m_cursorIsLocked = true;
-            }
-
-            if (m_cursorIsLocked)
+            else
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
-            else if (!m_cursorIsLocked)
+        }
+
+        public void UpdateCursorLock(bool escape)
+        {
+            //if the user set "lockCursor" we check & properly lock the cursos
+            if (m_LockCursor)
             {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
+                InternalLockUpdate(escape);
             }
+        }
+
+        private void InternalLockUpdate(bool escape)
+        {
+            //if (escape)
+            //{
+            //    m_cursorIsLocked = false;
+            //}
+            //else if (escape)
+            //{
+            //    m_cursorIsLocked = true;
+            //}
+
+            //if (m_cursorIsLocked)
+            //{
+            //    Cursor.lockState = CursorLockMode.Locked;
+            //    Cursor.visible = false;
+            //}
+            //else if (!m_cursorIsLocked)
+            //{
+            //    Cursor.lockState = CursorLockMode.None;
+            //    Cursor.visible = true;
+            //}
         }
 
         private Quaternion ClampRotationAroundXAxis(Quaternion q)

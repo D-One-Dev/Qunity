@@ -23,7 +23,7 @@ namespace Q3Movement
 
         [Header("Aiming")]
         [SerializeField] private Camera m_Camera;
-        [SerializeField] private MouseLook m_MouseLook = new MouseLook();
+        public MouseLook m_MouseLook = new MouseLook();
 
         [Header("Movement")]
         [SerializeField] private float m_Friction = 6;
@@ -56,12 +56,15 @@ namespace Q3Movement
         private Vector3 m_MoveInput;
         private Transform m_Tran;
         private Transform m_CamTran;
+        private bool escape;
 
         private void Awake()
         {
             playerInput = new NewInput();
             playerInput.Gameplay.Jump.performed += ctx => jumpButton = true;
             playerInput.Gameplay.Jump.canceled += ctx => jumpButton = false;
+            playerInput.Gameplay.Escape.performed += ctx => escape = true;
+            playerInput.Gameplay.Escape.canceled += ctx => escape = false;
         }
         private void OnEnable(){playerInput.Enable();}
         private void OnDisable(){playerInput.Disable();}
@@ -82,7 +85,8 @@ namespace Q3Movement
         {
             Vector2 input = playerInput.Gameplay.Direction.ReadValue<Vector2>();
             m_MoveInput = new Vector3(input.x, 0f, input.y);
-            m_MouseLook.UpdateCursorLock();
+            m_MouseLook.UpdateCursorLock(escape);
+            escape = false;
             QueueJump();
 
             // Set movement state.
