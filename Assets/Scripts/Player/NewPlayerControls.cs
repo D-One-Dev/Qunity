@@ -40,10 +40,10 @@ namespace Q3Movement
         // Returns player's current speed.
         public float Speed { get { return m_Character.velocity.magnitude; } }
 
-        private CharacterController m_Character;
+        public CharacterController m_Character;
         public Vector3 explosion;
         private Vector3 m_MoveDirectionNorm = Vector3.zero;
-        private Vector3 m_PlayerVelocity = Vector3.zero;
+        public Vector3 m_PlayerVelocity = Vector3.zero;
         private NewInput playerInput;
         private bool jumpButton;
 
@@ -57,6 +57,8 @@ namespace Q3Movement
         private Transform m_Tran;
         private Transform m_CamTran;
         private bool escape;
+
+        private bool lockXVel, lockYVel, lockZVel;
 
         private void Awake()
         {
@@ -103,9 +105,19 @@ namespace Q3Movement
             Vector2 delta = playerInput.Gameplay.MouseDelta.ReadValue<Vector2>() * Time.deltaTime;
             m_MouseLook.LookRotation(m_Tran, m_CamTran, delta);
 
-            // Move the character.
             m_PlayerVelocity += explosion;
+
+            if (lockXVel) m_PlayerVelocity.x = 0;
+            if (lockYVel) m_PlayerVelocity.y = 0;
+            if (lockZVel) m_PlayerVelocity.z = 0;
+
             m_Character.Move(m_PlayerVelocity * Time.deltaTime);
+
+            lockXVel = lockYVel = lockZVel = false;
+
+            if (Mathf.Abs(Mathf.Abs(m_Character.velocity.x) - Mathf.Abs(m_PlayerVelocity.x)) >= 5f) lockXVel = true;
+            if (Mathf.Abs(Mathf.Abs(m_Character.velocity.y) - Mathf.Abs(m_PlayerVelocity.y)) >= 5f) lockYVel = true;
+            if (Mathf.Abs(Mathf.Abs(m_Character.velocity.z) - Mathf.Abs(m_PlayerVelocity.z)) >= 5f) lockZVel = true;
         }
 
         // Queues the next jump.
