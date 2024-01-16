@@ -1,7 +1,8 @@
 using System.Collections;
+using Mirror;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class Projectile : NetworkBehaviour
 {
     [SerializeField] private GameObject explosion;
     [SerializeField] private float lifeTime;
@@ -12,10 +13,16 @@ public class Projectile : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        Vector3 explosionPos = transform.position;
-
-        Instantiate(explosion, explosionPos, Quaternion.identity);
+        CmdSpawnExplosion();
+        
         Destroy(gameObject);
+    }
+
+    [Server]
+    private void CmdSpawnExplosion()
+    {
+        GameObject exp = Instantiate(explosion, transform.position, Quaternion.identity);
+        NetworkServer.Spawn(exp, exp.GetComponent<NetworkIdentity>().assetId);
     }
 
     private IEnumerator StartLifeTime()
@@ -23,4 +30,6 @@ public class Projectile : MonoBehaviour
         yield return new WaitForSeconds(lifeTime);
         Destroy(gameObject);
     }
+    
+    private void OnDestroy() => NetworkServer.Destroy(gameObject);
 }

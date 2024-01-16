@@ -1,10 +1,11 @@
 using UnityEngine;
+using Mirror;
 
 namespace Q3Movement
 {
     // This script handles Quake III CPM(A) mod style player movement logic.
     [RequireComponent(typeof(CharacterController))]
-    public class NewPlayerControls : MonoBehaviour
+    public class NewPlayerControls : NetworkBehaviour
     {
         [System.Serializable]
         public class MovementSettings
@@ -73,6 +74,12 @@ namespace Q3Movement
 
         private void Start()
         {
+            if (!isLocalPlayer)
+            {
+                m_Camera.enabled = false;
+                return;
+            }
+
             m_Tran = transform;
             m_Character = GetComponent<CharacterController>();
 
@@ -85,6 +92,8 @@ namespace Q3Movement
 
         private void Update()
         {
+            if (!isLocalPlayer) return;
+            
             Vector2 input = playerInput.Gameplay.Direction.ReadValue<Vector2>();
             m_MoveInput = new Vector3(input.x, 0f, input.y);
             m_MouseLook.UpdateCursorLock(escape);

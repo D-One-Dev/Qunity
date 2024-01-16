@@ -1,8 +1,9 @@
 using UnityEngine;
 using Q3Movement;
 using System.Collections.Generic;
+using Mirror;
 
-public class ExplosionController : MonoBehaviour
+public class ExplosionController : NetworkBehaviour
 {
     [SerializeField] private float radius = 5.0F;
     [SerializeField] private float power = 10.0F;
@@ -67,4 +68,6 @@ public class ExplosionController : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    
+    private void OnDestroy() => NetworkServer.Destroy(gameObject);
 }
