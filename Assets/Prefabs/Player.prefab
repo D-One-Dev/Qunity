@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 283330706332015629}
   - component: {fileID: 8259226878364686573}
   - component: {fileID: 7374752847555295925}
+  - component: {fileID: 2518975832170584997}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -264,6 +265,22 @@ MonoBehaviour:
   positionSensitivity: 0.01
   rotationSensitivity: 0.01
   scaleSensitivity: 0.01
+--- !u!114 &2518975832170584997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 442479452461678615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90bd8e6789ba4ea48ba73d5b97829179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentGun: {fileID: 11400000, guid: 4fc17153cb04ca048b11b2baab02ca55, type: 2}
+  guns:
+  - {fileID: 11400000, guid: 4fc17153cb04ca048b11b2baab02ca55, type: 2}
+  ammo: 00000000
 --- !u!1 &1187401647868274538
 GameObject:
   m_ObjectHideFlags: 0
