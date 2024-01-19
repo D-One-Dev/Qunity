@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7544cfe35486274b99dcf2fdacd3143, type: 3}
-  m_Name: RocketLauncher
+  m_Name: Machinegun
   m_EditorClassIdentifier: 
-  gunName: RocketLauncher
-  isProjectile: 1
-  projectile: {fileID: 7702338871597815925, guid: 19396e3d17abdae4dab218711e37e774, type: 3}
+  gunName: Machinegun
+  isProjectile: 0
+  projectile: {fileID: 0}
   gun: {fileID: 0}
-  ammoAmount: 10
-  recoilTime: 0.75
+  ammoAmount: 0
+  recoilTime: 0
   raycastGunDamage: 0
-  gunColor: {r: 1, g: 0, b: 0, a: 1}
+  gunColor: {r: 1, g: 1, b: 0, a: 1}

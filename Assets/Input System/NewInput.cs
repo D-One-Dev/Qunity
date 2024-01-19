@@ -71,6 +71,24 @@ public partial class @NewInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MouseWheelUp"",
+                    ""type"": ""Value"",
+                    ""id"": ""f65dc96a-6541-4ed1-bb94-51c2ec3a71c7"",
+                    ""expectedControlType"": ""Analog"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MouseWheelDown"",
+                    ""type"": ""Value"",
+                    ""id"": ""77c72c4f-048f-41d0-9f72-4c03097e9613"",
+                    ""expectedControlType"": ""Analog"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -172,6 +190,28 @@ public partial class @NewInput: IInputActionCollection2, IDisposable
                     ""action"": ""Escape"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b451e6d2-9319-4b9a-b03e-9d342737079e"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseWheelUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a0aec00b-7ac0-430e-b760-42b5530644c5"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseWheelDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -191,6 +231,8 @@ public partial class @NewInput: IInputActionCollection2, IDisposable
         m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
         m_Gameplay_MouseLeftButton = m_Gameplay.FindAction("MouseLeftButton", throwIfNotFound: true);
         m_Gameplay_Escape = m_Gameplay.FindAction("Escape", throwIfNotFound: true);
+        m_Gameplay_MouseWheelUp = m_Gameplay.FindAction("MouseWheelUp", throwIfNotFound: true);
+        m_Gameplay_MouseWheelDown = m_Gameplay.FindAction("MouseWheelDown", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -257,6 +299,8 @@ public partial class @NewInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Jump;
     private readonly InputAction m_Gameplay_MouseLeftButton;
     private readonly InputAction m_Gameplay_Escape;
+    private readonly InputAction m_Gameplay_MouseWheelUp;
+    private readonly InputAction m_Gameplay_MouseWheelDown;
     public struct GameplayActions
     {
         private @NewInput m_Wrapper;
@@ -266,6 +310,8 @@ public partial class @NewInput: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Gameplay_Jump;
         public InputAction @MouseLeftButton => m_Wrapper.m_Gameplay_MouseLeftButton;
         public InputAction @Escape => m_Wrapper.m_Gameplay_Escape;
+        public InputAction @MouseWheelUp => m_Wrapper.m_Gameplay_MouseWheelUp;
+        public InputAction @MouseWheelDown => m_Wrapper.m_Gameplay_MouseWheelDown;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -290,6 +336,12 @@ public partial class @NewInput: IInputActionCollection2, IDisposable
             @Escape.started += instance.OnEscape;
             @Escape.performed += instance.OnEscape;
             @Escape.canceled += instance.OnEscape;
+            @MouseWheelUp.started += instance.OnMouseWheelUp;
+            @MouseWheelUp.performed += instance.OnMouseWheelUp;
+            @MouseWheelUp.canceled += instance.OnMouseWheelUp;
+            @MouseWheelDown.started += instance.OnMouseWheelDown;
+            @MouseWheelDown.performed += instance.OnMouseWheelDown;
+            @MouseWheelDown.canceled += instance.OnMouseWheelDown;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -309,6 +361,12 @@ public partial class @NewInput: IInputActionCollection2, IDisposable
             @Escape.started -= instance.OnEscape;
             @Escape.performed -= instance.OnEscape;
             @Escape.canceled -= instance.OnEscape;
+            @MouseWheelUp.started -= instance.OnMouseWheelUp;
+            @MouseWheelUp.performed -= instance.OnMouseWheelUp;
+            @MouseWheelUp.canceled -= instance.OnMouseWheelUp;
+            @MouseWheelDown.started -= instance.OnMouseWheelDown;
+            @MouseWheelDown.performed -= instance.OnMouseWheelDown;
+            @MouseWheelDown.canceled -= instance.OnMouseWheelDown;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -342,5 +400,7 @@ public partial class @NewInput: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnMouseLeftButton(InputAction.CallbackContext context);
         void OnEscape(InputAction.CallbackContext context);
+        void OnMouseWheelUp(InputAction.CallbackContext context);
+        void OnMouseWheelDown(InputAction.CallbackContext context);
     }
 }

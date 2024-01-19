@@ -10,4 +10,5 @@ public class Gun : ScriptableObject
     public int ammoAmount;
     public float recoilTime;
     public int raycastGunDamage;
+    public Color gunColor;
 }

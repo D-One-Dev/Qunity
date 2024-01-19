@@ -61,6 +61,8 @@ namespace Q3Movement
 
         private bool lockXVel, lockYVel, lockZVel;
 
+        private PlayerInventory m_Inventory;
+
         private void Awake()
         {
             playerInput = new NewInput();
@@ -82,6 +84,7 @@ namespace Q3Movement
 
             m_Tran = transform;
             m_Character = GetComponent<CharacterController>();
+            m_Inventory = GetComponent<PlayerInventory>();
 
             if (!m_Camera)
                 m_Camera = Camera.main;
@@ -127,6 +130,9 @@ namespace Q3Movement
             if (Mathf.Abs(Mathf.Abs(m_Character.velocity.x) - Mathf.Abs(m_PlayerVelocity.x)) >= 5f) lockXVel = true;
             if (Mathf.Abs(Mathf.Abs(m_Character.velocity.y) - Mathf.Abs(m_PlayerVelocity.y)) >= 5f) lockYVel = true;
             if (Mathf.Abs(Mathf.Abs(m_Character.velocity.z) - Mathf.Abs(m_PlayerVelocity.z)) >= 5f) lockZVel = true;
+
+            if (playerInput.Gameplay.MouseWheelUp.ReadValue<float>() > 0) m_Inventory.NextGun();
+            else if (playerInput.Gameplay.MouseWheelDown.ReadValue<float>() > 0) m_Inventory.PreviousGun();
         }
 
         // Queues the next jump.
